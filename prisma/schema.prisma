@@ -21,3 +21,18 @@ model Product {
 
   @@index([name])
 }
+
+model Stock {
+  id          Int       @id @default(autoincrement())
+  productName String
+  sku         String    @unique // Stok kodu
+  quantity    Int       @default(0)
+  minQuantity Int       @default(10) // Minimum stok seviyesi
+  location    String? // Depo lokasyonu
+  lastRestock DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([sku])
+  @@index([productName])
+}

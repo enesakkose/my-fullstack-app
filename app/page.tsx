@@ -14,7 +14,12 @@ export default function Home() {
         <div className='flex flex-col sm:flex-row gap-4 justify-center pt-4'>
           <Link href='/products'>
             <Button size='lg' className='w-full sm:w-auto'>
-              Ürünleri Görüntüle
+              Ürünler (tRPC)
+            </Button>
+          </Link>
+          <Link href='/stocks'>
+            <Button size='lg' variant='outline' className='w-full sm:w-auto'>
+              Stoklar (REST API)
             </Button>
           </Link>
         </div>
