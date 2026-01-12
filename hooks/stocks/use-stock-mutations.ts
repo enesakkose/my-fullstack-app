@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { api } from '@/lib/api'
 import { Stock, CreateStockData, UpdateStockData } from '@/types'
 
@@ -16,7 +17,11 @@ export function useStockMutations(options: UseStockMutationsOptions = {}) {
     mutationFn: (data: CreateStockData) => api.post<Stock>('/stocks', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stocks'] })
+      toast.success('Stok başarıyla oluşturuldu')
       onCreateSuccess?.()
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Stok oluşturulurken hata oluştu')
     },
   })
 
@@ -25,7 +30,11 @@ export function useStockMutations(options: UseStockMutationsOptions = {}) {
       api.put<Stock>(`/stocks/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stocks'] })
+      toast.success('Stok başarıyla güncellendi')
       onUpdateSuccess?.()
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Stok güncellenirken hata oluştu')
     },
   })
 
@@ -33,7 +42,11 @@ export function useStockMutations(options: UseStockMutationsOptions = {}) {
     mutationFn: (id: number) => api.delete<{ success: boolean }>(`/stocks/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stocks'] })
+      toast.success('Stok başarıyla silindi')
       onDeleteSuccess?.()
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Stok silinirken hata oluştu')
     },
   })
 

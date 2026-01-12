@@ -1,4 +1,5 @@
 import { trpc } from '@/lib/trpc/client'
+import { toast } from 'sonner'
 
 interface UseProductMutationsOptions {
   onCreateSuccess?: () => void
@@ -10,15 +11,33 @@ export function useProductMutations(options: UseProductMutationsOptions = {}) {
   const { onCreateSuccess, onUpdateSuccess, onDeleteSuccess } = options
 
   const createMutation = trpc.product.create.useMutation({
-    onSuccess: onCreateSuccess,
+    onSuccess: () => {
+      toast.success('Ürün başarıyla oluşturuldu')
+      onCreateSuccess?.()
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Ürün oluşturulurken hata oluştu')
+    },
   })
 
   const updateMutation = trpc.product.update.useMutation({
-    onSuccess: onUpdateSuccess,
+    onSuccess: () => {
+      toast.success('Ürün başarıyla güncellendi')
+      onUpdateSuccess?.()
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Ürün güncellenirken hata oluştu')
+    },
   })
 
   const deleteMutation = trpc.product.delete.useMutation({
-    onSuccess: onDeleteSuccess,
+    onSuccess: () => {
+      toast.success('Ürün başarıyla silindi')
+      onDeleteSuccess?.()
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Ürün silinirken hata oluştu')
+    },
   })
 
   const createProduct = (data: {
@@ -45,17 +64,14 @@ export function useProductMutations(options: UseProductMutationsOptions = {}) {
   }
 
   return {
-    // Create
     createProduct,
     isCreating: createMutation.isPending,
     createError: createMutation.error,
 
-    // Update
     updateProduct,
     isUpdating: updateMutation.isPending,
     updateError: updateMutation.error,
 
-    // Delete
     deleteProduct,
     isDeleting: deleteMutation.isPending,
     deleteError: deleteMutation.error,
